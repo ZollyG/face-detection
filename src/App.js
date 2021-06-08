@@ -43,7 +43,7 @@ function App() {
 
   async function updateImage(event) {
     let imageURL = URL.createObjectURL(event.target.files[0]);
-    setImage(<CircularProgress />);
+    setImage(<CircularProgress color="secondary" />);
 
     let fetchOptions = {};
     await toDataURL(imageURL).then((res) => {
@@ -98,7 +98,6 @@ function App() {
         <p>
           Edit <code>src/App.js</code> and save to reload.
         </p>
-
         <div>
           <input type="file" onChange={updateImage} />
           <div className="ImageContainer">{image}</div>
