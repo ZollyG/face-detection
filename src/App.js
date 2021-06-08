@@ -1,7 +1,13 @@
-import logo from "./logo.svg";
 import "./App.css";
 import { useState } from "react";
-import { CircularProgress } from "@material-ui/core";
+import {
+  AppBar,
+  CircularProgress,
+  Grid,
+  Toolbar,
+  Typography,
+  Button,
+} from "@material-ui/core";
 
 const toDataURL = (url) =>
   fetch(url)
@@ -40,6 +46,7 @@ const makeblob = function (dataURL) {
 
 function App() {
   let [image, setImage] = useState("");
+  let [faceDetails, setFaceDetails] = useState("");
 
   async function updateImage(event) {
     let imageURL = URL.createObjectURL(event.target.files[0]);
@@ -59,6 +66,11 @@ function App() {
     });
 
     let fetchedData = [];
+    let coordinates = [
+      <div className="Slogan">
+        <Typography variant="h4">Face detection results</Typography>
+      </div>,
+    ];
     let processedRectangles = [];
     await fetch(
       "https://22bed5d36ed14f6b8d67da26dee3804c.cognitiveservices.azure.com/face/v1.0/detect?overload=stream",
@@ -83,26 +95,61 @@ function App() {
             }}
           ></div>
         );
+
+        coordinates.push(
+          <div>
+            <p>
+              Face {fetchedData.indexOf(element) + 1} detected at [
+              {element.faceRectangle.top},{element.faceRectangle.left},
+              {element.faceRectangle.height},{element.faceRectangle.width}]
+            </p>
+          </div>
+        );
       }
     }
 
     processedRectangles.push(<img src={imageURL} alt="failsafe" />);
 
     setImage(processedRectangles.map((thing) => thing));
+    setFaceDetails(coordinates.map((value) => value));
   }
 
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <div>
-          <input type="file" onChange={updateImage} />
+      <div>
+        <AppBar position="fixed">
+          <Toolbar>
+            <Grid
+              justify="space-between" // Add it here :)
+              container
+              spacing={24}
+              alignItems="center"
+            >
+              <Grid item>
+                <Typography variant="h2">face-detect</Typography>
+              </Grid>
+              <Grid item>
+                <Button variant="contained" component="label" color="secondary">
+                  Analyze an image
+                  <input type="file" onChange={updateImage} hidden />
+                </Button>
+              </Grid>
+            </Grid>
+          </Toolbar>
+        </AppBar>
+        <Toolbar />
+      </div>
+
+      <div className="BackgroundSet">
+        <div className="Content">
+          <div className="Slogan">
+            <Typography variant="h3">Detecting faces accurately since 2021.</Typography>
+          </div>
           <div className="ImageContainer">{image}</div>
+          <div>{faceDetails}</div>
         </div>
-      </header>
+        <div className="Footer">©face-detect 2021. All rights reserved.</div>
+      </div>
     </div>
   );
 }
