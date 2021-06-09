@@ -1,5 +1,5 @@
 import "./App.css";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Resizer from "react-image-file-resizer";
 
 import {
@@ -72,6 +72,10 @@ function App() {
     <Typography variant="h3">Detecting faces accurately since 2021.</Typography>
   );
   let [faceDetails, setFaceDetails] = useState("");
+
+  useEffect(() => {
+    document.title = "face-detect service";
+  });
 
   //image upload, resize, API send, API receive
   async function updateImage(event) {
