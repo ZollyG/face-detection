@@ -1,6 +1,7 @@
 import "./App.css";
 import { useState } from "react";
 import Resizer from "react-image-file-resizer";
+
 import {
   AppBar,
   CircularProgress,
@@ -144,6 +145,14 @@ function App() {
     setFaceDetails(coordinates.map((value) => value));
   }
 
+  function refresh() {
+    setImage("");
+    setSlogan(
+      <Typography variant="h3">Detecting faces accurately since 2021.</Typography>
+    );
+    setFaceDetails("");
+  }
+
   return (
     <div className="App">
       <div>
@@ -156,7 +165,11 @@ function App() {
               alignItems="center"
             >
               <Grid item>
-                <Typography variant="h2">face-detect</Typography>
+                <div className="Home">
+                  <Typography variant="h2" onClick={refresh}>
+                    face-detect
+                  </Typography>
+                </div>
               </Grid>
               <Grid item>
                 <Button variant="contained" component="label" color="secondary">
