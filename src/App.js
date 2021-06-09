@@ -135,6 +135,8 @@ function App() {
           </div>
         );
       }
+    } else {
+      coordinates.push(<p>No faces found!</p>);
     }
 
     processedRectangles.push(<img src={imageURL} alt="failsafe" />);
