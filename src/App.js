@@ -1,5 +1,6 @@
 import "./App.css";
 import { useState } from "react";
+import Resizer from "react-image-file-resizer";
 import {
   AppBar,
   CircularProgress,
@@ -9,6 +10,7 @@ import {
   Button,
 } from "@material-ui/core";
 
+// image => base64 encoder
 const toDataURL = (url) =>
   fetch(url)
     .then((response) => response.blob())
@@ -22,6 +24,7 @@ const toDataURL = (url) =>
         })
     );
 
+// base64 => blob decoder
 const makeblob = function (dataURL) {
   var BASE64_MARKER = ";base64,";
   if (dataURL.indexOf(BASE64_MARKER) === -1) {
@@ -44,13 +47,38 @@ const makeblob = function (dataURL) {
   return new Blob([uInt8Array], { type: contentType });
 };
 
+// image resizer
+const resizeFile = (file) =>
+  new Promise((resolve) => {
+    Resizer.imageFileResizer(
+      file,
+      600,
+      600,
+      "JPEG",
+      100,
+      0,
+      (uri) => {
+        resolve(uri);
+      },
+      "file"
+    );
+  });
+
 function App() {
+  //set state variables
   let [image, setImage] = useState("");
+  let [slogan, setSlogan] = useState(
+    <Typography variant="h3">Detecting faces accurately since 2021.</Typography>
+  );
   let [faceDetails, setFaceDetails] = useState("");
 
+  //image upload, resize, API send, API receive
   async function updateImage(event) {
-    let imageURL = URL.createObjectURL(event.target.files[0]);
     setImage(<CircularProgress color="secondary" />);
+    let imageURL = "";
+    await resizeFile(event.target.files[0]).then((res) => {
+      imageURL = URL.createObjectURL(res);
+    });
 
     let fetchOptions = {};
     await toDataURL(imageURL).then((res) => {
@@ -80,6 +108,7 @@ function App() {
       .then((res) => res.json())
       .then((res) => (fetchedData = res));
     if (fetchedData.length) {
+      setSlogan("");
       for (let element of fetchedData) {
         console.log(element.faceRectangle);
         processedRectangles.push(
@@ -109,7 +138,6 @@ function App() {
     }
 
     processedRectangles.push(<img src={imageURL} alt="failsafe" />);
-
     setImage(processedRectangles.map((thing) => thing));
     setFaceDetails(coordinates.map((value) => value));
   }
@@ -142,9 +170,7 @@ function App() {
 
       <div className="BackgroundSet">
         <div className="Content">
-          <div className="Slogan">
-            <Typography variant="h3">Detecting faces accurately since 2021.</Typography>
-          </div>
+          <div className="Slogan">{slogan}</div>
           <div className="ImageContainer">{image}</div>
           <div>{faceDetails}</div>
         </div>
