@@ -80,7 +80,9 @@ function App() {
   //image upload, resize, API send, API receive
   async function updateImage(event) {
     setImage(<CircularProgress color="secondary" />);
+    setFaceDetails("");
     let imageURL = "";
+
     await resizeFile(event.target.files[0]).then((res) => {
       imageURL = URL.createObjectURL(res);
     });
