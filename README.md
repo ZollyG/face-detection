@@ -3,7 +3,7 @@ Front-end interface that allows user to upload local storage image and analyses 
 Technologies used include
 - HTML/CSS
 - JavaScript
-- React (including MaterialUI and React Router components)
+- React.js (including MaterialUI and React Router components)
 - Microsoft Azure Face API suite
 
 A live version of the app can be seen [here](https://hungry-saha-ef61a2.netlify.app).
